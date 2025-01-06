@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AwesomePasswordCheckerSuite">
+    <test name="src.test.java.tests">
+        <classes>
+            <class name="src.test.java.tests" />
+        </classes>
+    </test>
+</suite>

@@ -21,8 +21,14 @@
         <!-- Define plugins versions -->
         <checkstyle.version>2.17</checkstyle.version>
     </properties>
-    
-
+    <dependencies>
+        <dependency>
+          <groupId>org.testng</groupId>
+          <artifactId>testng</artifactId>
+          <version>7.9.0</version>
+          <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <finalName>app</finalName>
         <plugins>
@@ -36,9 +42,14 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>3.5.2</version>
+              <configuration>
+                <suiteXmlFiles>
+                  <suiteXmlFile>testng.xml</suiteXmlFile>
+                </suiteXmlFiles>
+              </configuration>
             </plugin>
         </plugins>
     </build>    
