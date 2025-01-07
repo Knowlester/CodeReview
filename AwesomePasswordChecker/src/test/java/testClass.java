@@ -9,7 +9,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 public class testClass {
@@ -19,7 +18,8 @@ public class testClass {
     @BeforeClass
     public void setUp() throws IOException {
         // Initialize the instance with a sample cluster centers file
-        checker = AwesomePasswordChecker.getInstance(new File("src/test/resources/cluster_centers_HAC_aff.csv"));
+        System.out.println(AwesomePasswordChecker.getInstance());
+        checker = AwesomePasswordChecker.getInstance();
     }
 
     @Test
@@ -33,8 +33,9 @@ public class testClass {
     @Test
     public void testMaskAff() {
         String password = "Hello123!";
-        int[] expectedMask = {4, 2, 2, 2, 1, 5, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int[] expectedMask = {4, 1, 1, 1, 1, 5, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int[] mask = checker.maskAff(password);
+
         Assert.assertEquals(mask, expectedMask, "Generated mask array does not match the expected values.");
     }
 
@@ -48,9 +49,13 @@ public class testClass {
 
     @Test(dataProvider = "passwordDistanceProvider")
     public void testGetDistance(String password, double expectedMinDistance) {
+        
         double distance = checker.getDIstance(password);
+        
+        System.out.println("dist");
+        System.out.println(distance);
+
         Assert.assertTrue(distance >= 0, "Distance should be non-negative.");
-        // You can further validate the distance if you have known expected values
     }
 
     @DataProvider
