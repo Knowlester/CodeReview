@@ -18,7 +18,6 @@ public class testClass {
     @BeforeClass
     public void setUp() throws IOException {
         // Initialize the instance with a sample cluster centers file
-        System.out.println(AwesomePasswordChecker.getInstance());
         checker = AwesomePasswordChecker.getInstance();
     }
 
@@ -52,9 +51,6 @@ public class testClass {
         
         double distance = checker.getDIstance(password);
         
-        System.out.println("dist");
-        System.out.println(distance);
-
         Assert.assertTrue(distance >= 0, "Distance should be non-negative.");
     }
 
@@ -65,4 +61,42 @@ public class testClass {
             {"HelloWorld", 0.0} // Replace 0.0 with an expected distance for "HelloWorld"
         };
     }
+    
+    public class ComputeMD5PerformanceTest {
+
+    @Test
+    public void testComputeMD5Performance() {
+        // Input string to test
+        String input = "The quick brown fox jumps over the lazy dog";
+
+        // Number of iterations for performance testing
+        int iterations = 100000;
+
+        // Record the start time
+        long startTime = System.nanoTime();
+
+        // Execute the method multiple times
+        for (int i = 0; i < iterations; i++) {
+            String md5Hash = AwesomePasswordChecker.computeMD5(input);
+            Assert.assertNotNull(md5Hash, "MD5 hash should not be null");
+        }
+
+        // Record the end time
+        long endTime = System.nanoTime();
+
+        // Calculate the total time taken
+        long duration = (endTime - startTime) / 1_000_000; // Convert to milliseconds
+
+        // Log the duration for analysis
+        System.out.println("Execution time for computeMD5: " + iterations + " iterations: " + duration + " ms");
+
+        // Define an acceptable time threshold (e.g., 2000 ms for 100,000 iterations)
+        long acceptableThresholdMs = 2000;
+
+        // Verify that the execution time is within the acceptable threshold
+        Assert.assertTrue(duration <= acceptableThresholdMs,
+            "Performance test failed: Execution time exceeded " + acceptableThresholdMs + " ms");
+    }
+}
+
 }
