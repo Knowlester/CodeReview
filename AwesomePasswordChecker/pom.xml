@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -14,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
         <!-- Define dependencies versions -->
-        <exec.mainClass>fr.isima.codereview.tp1.AwesomePasswordChecker</exec.mainClass>
+        <exec.mainClass>fr.isima.codereview.awesomepasswordchecker.AwesomePasswordChecker</exec.mainClass>
         
         <!-- Define test dependencies versions -->
         
@@ -47,7 +46,7 @@
               <version>3.5.2</version>
               <configuration>
                 <suiteXmlFiles>
-                  <suiteXmlFile>testng.xml</suiteXmlFile>
+                  <suiteXmlFile>src/main/java/testng.xml</suiteXmlFile>
                 </suiteXmlFiles>
               </configuration>
             </plugin>

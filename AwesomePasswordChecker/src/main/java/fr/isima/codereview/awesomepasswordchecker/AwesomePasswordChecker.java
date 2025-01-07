@@ -1,4 +1,4 @@
-package fr.isima.codereview.tp1;
+package fr.isima.codereview.awesomepasswordchecker;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -257,4 +257,5 @@ public class AwesomePasswordChecker {
 
     return md5Hex.toString();
   }
+  public static void main(String[] args){}
 }

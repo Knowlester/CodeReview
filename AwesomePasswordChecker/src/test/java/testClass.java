@@ -1,4 +1,8 @@
-import  fr.isima.codereview.tp1.AwesomePasswordChecker;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+import  fr.isima.codereview.awesomepasswordchecker.AwesomePasswordChecker;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -8,7 +12,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
-public class tests {
+public class testClass {
 
     private AwesomePasswordChecker checker;
 
