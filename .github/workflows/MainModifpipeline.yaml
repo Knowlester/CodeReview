@@ -1,0 +1,113 @@
+name: Build and Deploy to GitHub Maven Registry + Javadoc + Jacoco
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-javadoc:
+    runs-on: windows
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Set up Java
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '23'
+        distribution: 'Default'
+
+    # Build the project and generate Javadoc
+    - name: Build and Generate Javadoc
+      run: mvn clean package javadoc:javadoc
+
+    - name: Extract Maven Version
+      id: version
+      run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+    - name: Use Version
+      run: echo "Deploying version $VERSION"
+
+    # Deploy to GitHub Pages
+    - name: Deploy Javadoc to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: target/site/apidocs
+        destination_dir: javadoc/${{ github.ref_name }}
+
+  deploy:
+    runs-on: windows
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up JDK
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '23'
+        distribution: 'default'
+        server-id: github
+        settings-path: ~/.m2
+
+    # Step 3: Configure Maven project version dynamically
+    - name: Set Maven Version
+      id: version
+      run: |
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    # Step 4: Build the project
+    - name: Build Project
+      run: mvn clean install
+
+    # Step 5: Deploy to GitHub Maven Registry
+    - name: Deploy to GitHub Maven Registry
+      env:
+        G_ACTOR: ${{ secrets.G_ACTOR }}
+        G_TOKEN: ${{ secrets.G_TOKEN }}
+      run: mvn deploy
+
+  deploy-jacoco:
+    runs-on: windows
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'default'
+        java-version: '23'
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven
+
+    - name: Build with Maven and Generate JaCoCo Report
+      run: mvn clean verify
+
+    - name: Deploy JaCoCo Report to GitHub Pages
+      run: |
+        mkdir -p out/jacoco
+        cp -r target/site/jacoco/* out/jacoco/
+        echo "${GITHUB_REF_NAME}" > out/jacoco/version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: out
