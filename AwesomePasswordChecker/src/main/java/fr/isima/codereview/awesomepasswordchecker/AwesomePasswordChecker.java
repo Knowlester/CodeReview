@@ -20,11 +20,11 @@ public class AwesomePasswordChecker {
 
   private final List<double[]> clusterCenters = new ArrayList<>();
   /**
-  * Méthode pour récupérer une instance.
+  * Méthode pour créer une instance à partir d'une file donnée.
   * 
-  * @param file type File
-  * @return instance
-  * @throws IOException si pas d'instance
+  * @param file type File, fichier entré
+  * @return instance de la classe
+  * @throws IOException si pas d'instance créée (null)
   */
   public static AwesomePasswordChecker getInstance(File file)
   throws IOException {
@@ -34,24 +34,24 @@ public class AwesomePasswordChecker {
     return instance;
   }
   /**
-  * Méthode pour récupérer une instance sans file.
+  * Méthode pour créer une instance avec une file par défaut.
   *
   * @return instance
-  * @throws IOException si pas d'instance
+  * @throws IOException si pas d'instance créée (null)
   */
   public static AwesomePasswordChecker getInstance() throws IOException {
     if (instance == null) {
-      InputStream is = new FileInputStream("src/main/java/fr/isima/codereview/awesomepasswordchecker/cluster_centers_HAC_aff.txt");
+      InputStream is = new FileInputStream("src/main/java/fr/isima/codereview/awesomepasswordchecker/cluster_centers_HAC_aff.csv");
       instance = new AwesomePasswordChecker(is);
 
     }
     return instance;
   }
   /**
-  * Méthode pour récupérer une instance.
+  * Méthode pour mettre les centres du fichier converti en InputStream dans un tableau clusterCenters.
   * 
-  * @param is type InputStream
-  * @throws IOException si pas d'instance
+  * @param is type InputStream, permet de parcourir des doubles séparés par des virgules issus d'un csv
+  * @throws IOException si erreur de lecture de l'InputStreamReader
   */
   private AwesomePasswordChecker(InputStream is) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -67,7 +67,7 @@ public class AwesomePasswordChecker {
     br.close();
   }
   /**
-  * Méthode pour récupérer une instance sans file.
+  * Méthode pour calculer le masque d'un mot de passe.
   * @param password type String
   * @return tableau d'int
   */
@@ -129,7 +129,7 @@ public class AwesomePasswordChecker {
     return maskArray;
   }
   /**
-  * Méthode pour récupérer une distance.
+  * Méthode pour récupérer une distance entre un mot de passe (sous forme de masque) et un ensemble de centres de clusters.
   * 
   * @param password type String
   * @return double
@@ -137,6 +137,8 @@ public class AwesomePasswordChecker {
   public double getDIstance(String password) {
     int[] maskArray = maskAff(password);
     double minDistance = Double.MAX_VALUE;
+
+    //la distance est la plus petite distance euclidienne entre le masque et l'ensemble de centres.
 
     for (double[] center : clusterCenters) {
 
@@ -146,10 +148,10 @@ public class AwesomePasswordChecker {
     return minDistance;
   }
   /**
-  * Méthode pour récupérer une distance euclidienne.
+  * Méthode qui renvoie une distance euclidienne entre deux tableaux.
   * 
-  * @param dist1 type tableau d'entiers
-  * @param dist2 type tableau de doubles
+  * @param mask type tableau d'entiers
+  * @param center type tableau de doubles
   * @return la distance euclidienne
   */
   private double euclideanDistance(int[] mask, double[] center) {
@@ -160,37 +162,42 @@ public class AwesomePasswordChecker {
     return Math.sqrt(sum);
   }
   /**
-  * Méthode pour récupérer une instance.
+  * Méthode pour calculer le hash MD5 d'une chaîne de caractères.
   * 
   * @param input type String
-  * @return instance
+  * @return type String le hash de la string d'entrée
   */
   public static String computeMD5(String input) {
-    byte[] message = input.getBytes();
-    int messageLenBytes = message.length;
+    
+    // Step 1: Input transformation
 
-    int numBlocks = ((messageLenBytes + 8) >>> 6) + 1;
-    int totalLen = numBlocks << 6;
-    byte[] paddingBytes = new byte[totalLen - messageLenBytes];
+    byte[] inputBytes = input.getBytes();
+    int inputLength = inputBytes.length;
+
+    int num512BitBlocks = ((inputLength + 8) >>> 6) + 1;
+    int totalPaddedLength = num512BitBlocks << 6;
+    byte[] paddingBytes = new byte[totalPaddedLength - inputLength];
     paddingBytes[0] = (byte) 0x80;
 
-    long messageLenBits = (long) messageLenBytes << 3;
-    ByteBuffer lengthBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(messageLenBits);
+    long inputLengthBits = (long) inputLength << 3;
+    ByteBuffer lengthBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(inputLengthBits);
     byte[] lengthBytes = lengthBuffer.array();
 
-    byte[] paddedMessage = new byte[totalLen];
-    System.arraycopy(message, 0, paddedMessage, 0, messageLenBytes);
-    System.arraycopy(paddingBytes, 0, paddedMessage, messageLenBytes, paddingBytes.length);
-    System.arraycopy(lengthBytes, 0, paddedMessage, totalLen - 8, 8);
+    byte[] paddedinputBytes = new byte[totalPaddedLength];
+    System.arraycopy(inputBytes, 0, paddedinputBytes, 0, inputLength);
+    System.arraycopy(paddingBytes, 0, paddedinputBytes, inputLength, paddingBytes.length);
+    System.arraycopy(lengthBytes, 0, paddedinputBytes, totalPaddedLength - 8, 8);
 
-    int[] hexa = {
+    // Step 2: Definitions
+
+    int[] md5State = {
       0x67452301,
       0xefcdab89,
       0x98badcfe,
       0x10325476
     };
 
-    int[] khextab = {
+    int[] md5Constants = {
       0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
       0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be, 0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
       0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa, 0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
@@ -201,56 +208,58 @@ public class AwesomePasswordChecker {
       0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1, 0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
     };
 
-    int[] rint = {
+    int[] shiftAmounts = {
       7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
       5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
       4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
       6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
     };
 
-    for (int i = 0; i < numBlocks; i++) {
-      int[] wvar = new int[16];
+    // Step 3: Calculation
+
+    for (int i = 0; i < num512BitBlocks; i++) {
+      int[] messageSchedule = new int[16];
       for (int j = 0; j < 16; j++) {
-        wvar[j] = ByteBuffer.wrap(paddedMessage, (i << 6) + (j << 2), 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+        messageSchedule[j] = ByteBuffer.wrap(paddedinputBytes, (i << 6) + (j << 2), 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
       }
 
-      int first = hexa[0];
-      int second = hexa[1];
-      int third = hexa[2];
-      int fourth = hexa[3];
+      int first = md5State[0];
+      int second = md5State[1];
+      int third = md5State[2];
+      int fourth = md5State[3];
 
       for (int j = 0; j < 64; j++) {
-        int calculf;
-        int calculg;
+        int functionresult;
+        int messageIndex;
         if (j < 16) {
-          calculf = (second & third) | (~second & fourth);
-          calculg = j;
+          functionresult = (second & third) | (~second & fourth);
+          messageIndex = j;
         } else if (j < 32) {
-          calculf = (fourth & second) | (~fourth & third);
-          calculg = (5 * j + 1) % 16;
+          functionresult = (fourth & second) | (~fourth & third);
+          messageIndex = (5 * j + 1) % 16;
         } else if (j < 48) {
-          calculf = second ^ third ^ fourth;
-          calculg = (3 * j + 5) % 16;
+          functionresult = second ^ third ^ fourth;
+          messageIndex = (3 * j + 5) % 16;
         } else {
-          calculf = third ^ (second | ~fourth);
-          calculg = (7 * j) % 16;
+          functionresult = third ^ (second | ~fourth);
+          messageIndex = (7 * j) % 16;
         }
         final int temp = fourth;
         fourth = third;
         third = second;
-        second = second + Integer.rotateLeft(first + calculf + khextab[j] + wvar[calculg], rint[j]);
+        second = second + Integer.rotateLeft(first + functionresult + md5Constants[j] + messageSchedule[messageIndex], shiftAmounts[j]);
         first = temp;
       }
 
-      hexa[0] += first;
-      hexa[1] += second;
-      hexa[2] += third;
-      hexa[3] += fourth;
+      md5State[0] += first;
+      md5State[1] += second;
+      md5State[2] += third;
+      md5State[3] += fourth;
     }
 
-    // Step 5: Output
+    // Step 4: Output
     ByteBuffer md5Buffer = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
-    md5Buffer.putInt(hexa[0]).putInt(hexa[1]).putInt(hexa[2]).putInt(hexa[3]);
+    md5Buffer.putInt(md5State[0]).putInt(md5State[1]).putInt(md5State[2]).putInt(md5State[3]);
     byte[] md5Bytes = md5Buffer.array();
 
     StringBuilder md5Hex = new StringBuilder();
