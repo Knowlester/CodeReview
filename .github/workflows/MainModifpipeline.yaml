@@ -6,38 +6,6 @@ on:
       - main
 
 jobs:
-  deploy-javadoc:
-    runs-on: windows
-
-    steps:
-    # Checkout the repository
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-
-    # Set up Java
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '23'
-        distribution: 'Default'
-
-    # Build the project and generate Javadoc
-    - name: Build and Generate Javadoc
-      run: mvn clean package javadoc:javadoc
-
-    - name: Extract Maven Version
-      id: version
-      run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-    - name: Use Version
-      run: echo "Deploying version $VERSION"
-
-    # Deploy to GitHub Pages
-    - name: Deploy Javadoc to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: target/site/apidocs
-        destination_dir: javadoc/${{ github.ref_name }}
 
   deploy:
     runs-on: windows
@@ -73,6 +41,38 @@ jobs:
         G_ACTOR: ${{ secrets.G_ACTOR }}
         G_TOKEN: ${{ secrets.G_TOKEN }}
       run: mvn deploy
+  deploy-javadoc:
+    runs-on: windows
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Set up Java
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '23'
+        distribution: 'Default'
+
+    # Build the project and generate Javadoc
+    - name: Build and Generate Javadoc
+      run: mvn clean package javadoc:javadoc
+
+    - name: Extract Maven Version
+      id: version
+      run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+    - name: Use Version
+      run: echo "Deploying version $VERSION"
+
+    # Deploy to GitHub Pages
+    - name: Deploy Javadoc to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: target/site/apidocs
+        destination_dir: javadoc/${{ github.ref_name }}
 
   deploy-jacoco:
     runs-on: windows
