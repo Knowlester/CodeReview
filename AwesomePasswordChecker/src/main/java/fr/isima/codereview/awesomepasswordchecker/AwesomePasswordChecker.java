@@ -1,4 +1,4 @@
-package fr.isima.codereview.tp1;
+package fr.isima.codereview.awesomepasswordchecker;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,14 +35,15 @@ public class AwesomePasswordChecker {
   }
   /**
   * Méthode pour récupérer une instance sans file.
-  * 
+  *
   * @return instance
   * @throws IOException si pas d'instance
   */
   public static AwesomePasswordChecker getInstance() throws IOException {
     if (instance == null) {
-      InputStream is = AwesomePasswordChecker.class.getClassLoader().getResourceAsStream("cluster_centers_HAC_aff.csv");
+      InputStream is = new FileInputStream("src/main/java/fr/isima/codereview/awesomepasswordchecker/cluster_centers_HAC_aff.txt");
       instance = new AwesomePasswordChecker(is);
+
     }
     return instance;
   }
@@ -56,9 +57,8 @@ public class AwesomePasswordChecker {
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
     String line;
     while ((line = br.readLine()) != null) {
-      String[] values = line.split(";");
+      String[] values = line.split(",");
       double[] center = new double[values.length];
-
       for (int i = 0; i < values.length; ++i) {
         center[i] = Double.parseDouble(values[i]);
       }
@@ -137,8 +137,11 @@ public class AwesomePasswordChecker {
   public double getDIstance(String password) {
     int[] maskArray = maskAff(password);
     double minDistance = Double.MAX_VALUE;
+
     for (double[] center : clusterCenters) {
+
       minDistance = Math.min(euclideanDistance(maskArray, center), minDistance);
+
     }
     return minDistance;
   }
@@ -149,10 +152,10 @@ public class AwesomePasswordChecker {
   * @param dist2 type tableau de doubles
   * @return la distance euclidienne
   */
-  private double euclideanDistance(int[] dist1, double[] dist2) {
+  private double euclideanDistance(int[] mask, double[] center) {
     double sum = 0;
-    for (int i = 0; i < dist1.length; i++) {
-      sum += (dist1[i] - dist2[i]) * (dist1[i] + dist2[i]);
+    for (int i = 0; i < Math.min(mask.length, center.length); i++) {
+      sum += Math.pow(mask[i] - center[i],2);
     }
     return Math.sqrt(sum);
   }
@@ -257,4 +260,6 @@ public class AwesomePasswordChecker {
 
     return md5Hex.toString();
   }
+
+  public static void main(String[] args){}
 }
