@@ -2,14 +2,17 @@
 
 
 Le principe: 
-Un évaluateur de robustesse de mots de passe en Java qui utilise des techniques de clustering et inclut une implémentation de l'algorithme de hachage MD5. 
+Ce projet contient un évaluateur de robustesse de mots de passe en Java utilisant des techniques de clustering avec une implémentation de l'algorithme MD5 de hachage. 
 
 La structure:
 Ce projet est structuré comme un projet Maven et inclut des tests testNG pour garantir son bon fonctionnement.
 
 
 Fonctionnalités:
-*Clustering des mots de passe : Évalue la robustesse d'un mot de passe en calculant la distance par rapport à des clusters prédéfinis de caractéristiques des mots de passe.
+
+*Clustering des mots de passe : Évalue la robustesse d'un mot de passe en calculant la distance par rapport à des clusters de caractéristiques des mots de passe.
+Par défaut, une liste de centres de clusters Hierarchical Agglomerative Cluster est utilisée.
+
 *Hachage MD5 : Inclut une implémentation manuelle de l'algorithme de hachage MD5.
 
 Versions:
@@ -26,4 +29,4 @@ Sonarqube 3.9.1.2184
 Owasp Dependency Check 8.3.1
 
 Cloner le dépôt:
-git clone https://github.com/yourusername/AwesomePasswordChecker.git
+git clone https://github.com/yourusername/CodeReview.git
