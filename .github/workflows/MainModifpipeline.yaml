@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '23'
-        distribution: 'default'
+        distribution: 'temurin'
         server-id: github
         settings-path: ~/.m2
 
@@ -54,7 +54,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '23'
-        distribution: 'Default'
+        distribution: 'temurin'
 
     # Build the project and generate Javadoc
     - name: Build and Generate Javadoc
@@ -84,7 +84,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        distribution: 'default'
+        distribution: 'temurin'
         java-version: '23'
 
     - name: Cache Maven dependencies

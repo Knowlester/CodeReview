@@ -15,7 +15,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'default'
+          distribution: 'temurin'
           java-version: '23'
 
       - name: Cache Maven dependencies
@@ -39,7 +39,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'default'
+          distribution: 'temurin'
           java-version: '23'
 
       - name: Cache Maven dependencies
@@ -63,7 +63,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'default'
+          distribution: 'temurin'
           java-version: '23'
 
       - name: Cache Maven dependencies
@@ -87,7 +87,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'default'
+          distribution: 'temurin'
           java-version: '23'
 
       - name: Cache Maven dependencies
