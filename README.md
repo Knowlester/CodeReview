@@ -32,9 +32,11 @@ Cloner le dépôt:
 git clone https://github.com/yourusername/CodeReview.git
 
 
+-----------------------------------------------------------------------------------
 
-**Password strength checker
-**
+
+**Password strength checker**
+
 The principle: 
 This project contains a Java password strength evaluator using clustering techniques with an implementation of the MD5 hashing algorithm.
 
