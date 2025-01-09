@@ -11,7 +11,7 @@ Ce projet est structuré comme un projet Maven et inclut des tests testNG pour g
 Fonctionnalités:
 
 *Clustering des mots de passe : Évalue la robustesse d'un mot de passe en calculant la distance par rapport à des clusters de caractéristiques des mots de passe.
-Par défaut, une liste de centres de clusters Hierarchical Agglomerative Cluster est utilisée.
+Par défaut, un ensemble de centres de clusters Hierarchical Agglomerative Cluster est utilisé.
 
 *Hachage MD5 : Inclut une implémentation manuelle de l'algorithme de hachage MD5.
 
