@@ -8,7 +8,7 @@ on:
 jobs:
 
   deploy:
-    runs-on: windows
+    runs-on: windows-latest
 
     steps:
     # Step 1: Checkout repository
@@ -42,7 +42,7 @@ jobs:
         G_TOKEN: ${{ secrets.G_TOKEN }}
       run: mvn deploy
   deploy-javadoc:
-    runs-on: windows
+    runs-on: windows-latest
 
     steps:
     # Checkout the repository
@@ -75,7 +75,7 @@ jobs:
         destination_dir: javadoc/${{ github.ref_name }}
 
   deploy-jacoco:
-    runs-on: windows
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
