@@ -7,7 +7,7 @@ on:
 
 jobs:
   checkstyle:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,7 +30,7 @@ jobs:
         run: mvn checkstyle:check
 
   unit-tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: checkstyle
     steps:
       - name: Checkout code
@@ -54,7 +54,7 @@ jobs:
         run: mvn test
 
   jacoco-coverage:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: unit-tests
     steps:
       - name: Checkout code
@@ -78,7 +78,7 @@ jobs:
         run: mvn clean verify jacoco:report jacoco:check -Djacoco.check.minCoverage=90
 
   sonarqube-sast:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: jacoco-coverage
     steps:
       - name: Checkout code
