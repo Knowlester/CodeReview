@@ -30,3 +30,27 @@ Owasp Dependency Check 8.3.1
 
 Cloner le dépôt:
 git clone https://github.com/yourusername/CodeReview.git
+
+
+-----------------------------------------------------------------------------------
+
+
+**Password strength checker**
+
+The principle: 
+This project contains a Java password strength evaluator using clustering techniques with an implementation of the MD5 hashing algorithm.
+
+Structure: 
+This project is structured as a Maven project and includes TestNG tests to ensure it works properly.
+
+Features:
+*Password clustering: Evaluates the strength of a password by calculating the distance to clusters of password characteristics. By default, a list of Hierarchical Agglomerative Cluster centres is used.
+*MD5 Hashing: Includes a manual implementation of the MD5 hashing algorithm.
+
+Versions: 
+Java 23 Maven 2.7
+
+Dependencies: 
+Javadoc 3.4.0 Checkstyle 2.17 TestNG 7.9.0 Surefire 3.5.2 JaCoCo 0.8.12 Sonarqube 3.9.1.2184 Owasp Dependency Check 8.3.1
+
+Clone the repository: git clone https://github.com/yourusername/CodeReview.git
