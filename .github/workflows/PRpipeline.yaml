@@ -79,7 +79,7 @@ jobs:
 
   sonarqube-sast:
     runs-on: windows
-    needs: performance-tests
+    needs: jacoco-coverage
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
